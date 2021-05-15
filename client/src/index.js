@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import "./style.css";
-import Context from "./Context";
+import Context from "./ContextFiles/Context";
 ReactDOM.render(
   <React.StrictMode>
     <Context>

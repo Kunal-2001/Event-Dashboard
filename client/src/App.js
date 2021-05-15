@@ -1,17 +1,16 @@
 import React, { useContext, useState, useEffect } from "react";
-import Register from "./Register";
-import Login from "./Login";
-import Home from "./Home";
-import Table from "./Table";
-import Landing from "./landing";
+import Register from "./AuthComponent/Register";
+import Login from "./AuthComponent/Login";
+import Table from "./UI2.0/AttendeeTable/Table";
+import Landing from "./Landing/landing";
 import ProtectedRoute from "./ProtectedRoute";
-import NewDash from "./UI2.0/newdashboard";
-import NewPeople from "./UI2.0/newpeople";
-import AddEvent from "./UI2.0/addevent";
-import NewCalendar from "./UI2.0/newcalendar";
-import PageNotFound from "./PageNotFound";
-import Profile from "./UI2.0/newprofile";
-import Settings from "./UI2.0/settings";
+import NewDash from "./UI2.0/EventDashboard/newdashboard.js";
+import NewPeople from "./UI2.0/InvitationDesk/newpeople";
+import AddEvent from "./UI2.0/NewEvent/addevent";
+import NewCalendar from "./UI2.0/EventCalender/newcalendar";
+import PageNotFound from "./404Component/PageNotFound";
+import Profile from "./UI2.0/UserDashboard/newprofile";
+import Settings from "./UI2.0/Settings/settings";
 // import usePersist from "./components/Persist";
 import {
   BrowserRouter as Router,
@@ -22,16 +21,9 @@ import {
 } from "react-router-dom";
 import "./App.css";
 import Axios from "axios";
-import { State } from "./Context";
-
-// import Context from "./Context";
+import { State } from "./ContextFiles/Context";
 
 function App(props) {
-  // const [userData, setUserData] = useState({
-  //   token: undefined,
-  //   user: undefined,
-  // });
-
   const { setUserData, setData, isAuth } = useContext(State);
   let history = useHistory();
 
@@ -73,25 +65,15 @@ function App(props) {
         <Route exact path="/signIn">
           <Register />
         </Route>
-        {/* <Route exact path='/newui'>
-            <NewNav />
-          </Route> */}
-        {/* <Route exact path='/newdashboard'>
-            <NewDash />
-          </Route> */}
         <ProtectedRoute exact path="/newpeople">
           <NewPeople />
         </ProtectedRoute>
-        {/* <ProtectedRoute exact path="/abc">
-          <Profile />
-        </ProtectedRoute> */}
         <ProtectedRoute exact path="/newcalendar">
           <NewCalendar />
         </ProtectedRoute>
         <Route exact path="/settings">
           <Settings />
         </Route>
-        <Route exact path="/dashboard" component={Home} />
         <ProtectedRoute
           exact
           path="/addevent"
@@ -99,7 +81,6 @@ function App(props) {
         ></ProtectedRoute>
         <ProtectedRoute exact path="/user" component={Profile}></ProtectedRoute>
         <ProtectedRoute exact path="/user/:id">
-          {/* <Home /> */}
           <NewDash />
         </ProtectedRoute>
         <ProtectedRoute exact path="/table">

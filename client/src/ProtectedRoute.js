@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { Route, Redirect } from "react-router-dom";
-import { State } from "./Context";
+import { State } from "./ContextFiles/Context";
 import jwtDecode from "jwt-decode";
 
 const ProtectedRoute = ({
