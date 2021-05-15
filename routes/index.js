@@ -1,5 +1,4 @@
 var express = require("express");
-var app = express();
 var router = express.Router();
 var bcrypt = require("bcrypt");
 var ejs = require("ejs");
@@ -19,10 +18,7 @@ var mailer = require("../controller/mailer");
 var User = require("../models/user");
 var jwt = require("jsonwebtoken");
 var auth = require("../Middleware/auth");
-// const { use } = require("../config/mailConfig");
 const Transporter = require("../config/mailConfig");
-
-const { eventNames } = require("../config/mailConfig");
 
 // cron.schedule("1 * * * * *", function () {
 //   console.log("hello");
@@ -34,7 +30,7 @@ function arraymove(arr, fromIndex, toIndex) {
   arr.splice(toIndex, 0, element);
 }
 
-router.post("/login", async function (req, res, next) {
+router.post("/login", async function (req, res) {
   const { username, password } = req.body;
   if (!username || !password) {
     return res.status(400).json({ msg: "Please enter all the fields" });
@@ -53,7 +49,7 @@ router.post("/login", async function (req, res, next) {
       }
       jwt.sign(
         { id: user._id },
-        "jwtToken",
+        process.env.SECRET_JWT_TOKEN,
         { expiresIn: 3600 },
         (err, token) => {
           if (err) throw err;
@@ -85,9 +81,13 @@ router.post("/register", async function (req, res) {
       });
       newUser.save();
 
-      const token = jwt.sign({ id: newUser._id }, "jwtToken", {
-        expiresIn: 3600,
-      });
+      const token = jwt.sign(
+        { id: newUser._id },
+        process.env.SECRET_JWT_TOKEN,
+        {
+          expiresIn: 3600,
+        }
+      );
       res.status(200).json({
         token,
         user: {
@@ -104,7 +104,7 @@ router.post("/validToken", async function (req, res) {
     const token = req.header("x-auth-token");
     if (!token) return res.json(false);
 
-    const verified = jwt.verify(token, "jwtToken");
+    const verified = jwt.verify(token, process.env.SECRET_JWT_TOKEN);
     if (!verified) return res.json(false);
 
     const user = await User.findById(verified.id);
@@ -125,10 +125,7 @@ router.get("/authUser", auth, async function (req, res) {
 });
 
 router.post("/user", async (req, res, next) => {
-  // console.log(req.isAuthenticated());
-  // console.log(req.body);
   let id = req.body.data.id;
-  // let id = "5f316249bf8263611807b23d";
   let data = await userData(id);
   let event = [];
   data.events.forEach((item) => {
@@ -148,13 +145,7 @@ router.post("/user", async (req, res, next) => {
 });
 
 router.post("/bardata", async (req, res, next) => {
-  // console.log(Date.now());
-  // app.set("id", req.session.passport.user);
-  // console.log(req.user);
-  // app.set("id", req.user.id);
   let username = req.body.name;
-  // console.log(username);
-  // let username = "yoman";
   let data = await events(username);
   let days = [
     "Sunday",
